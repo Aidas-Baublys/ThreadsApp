@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Name="NxButton" Content="Button" FontSize="32" HorizontalAlignment="Left" Margin="306,160,0,0" VerticalAlignment="Top" Width="196" Height="110" Click="NxButton_Click"/>
-
+        <Button Name="NxButton" Content="Button" FontSize="32" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="196" Height="110" Click="NxButton_Click2"/>
+        <WebBrowser Name="PxBrowser" HorizontalAlignment="Left" Height="284" Margin="10,125,0,0" VerticalAlignment="Top" Width="772"/>
     </Grid>
 </Window>

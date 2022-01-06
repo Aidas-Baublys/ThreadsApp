@@ -20,6 +20,8 @@ namespace ThreadsApp
 {
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty htmlProperty = DependencyProperty.RegisterAttached("Html", typeof(string), typeof(MainWindow), new FrameworkPropertyMetadata(OnHtmlChange));
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,21 +44,31 @@ namespace ThreadsApp
             });
         }
 
-        private void NxButton_Click2(object sender, RoutedEventArgs e)
+        private async void NxButton_Click2(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
-            {
-                MessageBox.Show("Siuncia nx");
-                Debug.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId}");
-                HttpClient webClient = new HttpClient();
-                string html = webClient.GetStringAsync("https://speed.hetzner.de/100MB.bin").Result;
+            Debug.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId}");
 
-                NxButton.Dispatcher.Invoke(() =>
-                {
-                    Debug.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId}");
-                    NxButton.Content = "Done";
-                });
+            string html = "";
+
+            await Task.Run(async () =>
+            {
+                Debug.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId} working");
+                HttpClient webClient = new HttpClient();
+                html = webClient.GetStringAsync("https://google.com").Result;
             });
+
+            Debug.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId} done");
+            NxButton.Content = "Done";
+            PxBrowser.SetValue(htmlProperty, html);
+        }
+
+        static void OnHtmlChange(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            WebBrowser webBrowser = dependencyObject as WebBrowser;
+            if (webBrowser != null)
+            {
+                webBrowser.NavigateToString(e.NewValue as string);
+            }
         }
     }
 }
